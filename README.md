@@ -23,10 +23,10 @@ A tetris game using DOM Manpulation, Javascript, HTML, and CSS.
 ---
 ## Psuedo Code
 1.Define the required constants:
-   *Tetris peices 
-   *Score 
-   *Level
-   *Game board rows and colomns 
+   * Tetris peices 
+   * Score 
+   * Level
+   * Game board rows and colomns 
 
 2. Set up event listeners:
    * Add event listener to the game board and give each cell an address (x, y) 
