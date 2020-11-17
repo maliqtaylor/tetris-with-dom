@@ -1,52 +1,74 @@
-#head, #foot, #game-container{
+ html {
+ box-sizing: border-box
+}
+
+*, /* All elements*/
+*::before, /* All ::before pseudo-elements */
+*::after { /* All ::after pseudo-elements */
+ box-sizing: inherit;
+}
+
+:root {
+ font-size: 62.5%
+}
+
+body {
+ margin: 0;
+ height: 100vh;
+ min-height: 100vh;
+ text-align: center;
+}
+
+#head, #foot, #game-container,#up-next, #hold{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
+}
+
+#piece-data{
+    padding-right: 5%;
+}
+
+#up-next, #hold p{
+    margin-bottom: auto;
 }
 
 #head, #foot{
     height: 10vh;
-    max-height: 10vh;
 }
 
 #game-container {
     flex-direction: row;
-    height: 70vh;
-}
-
-#piece-data{
-    flex-direction: column;
-}
-
-#holder, #up-next{
-    display: grid;
-    grid-template-rows: repeat(1, 20vmin);
-    grid-template-columns: repeat(1, 20vmin);
-    margin-right: auto;
-    border: 1px solid black;
-    margin-top: 15px;
-      
+    height: 80vh;
+    overflow: hidden;
 }
 
 #board{
     display: grid;
-    grid-template-rows: repeat(15, 6vmin);
-    grid-template-columns: repeat(10, 6vmin);
+    grid-template-rows: repeat(15, 20px);
+    grid-template-columns: repeat(10, 20px);
     grid-gap: 1px;
-    margin: auto;
+    max-height: 315px;
 }
 
-#board .cell {
+.cell {
     border: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.side-container{
+    display: grid;
+    grid-template-rows: repeat(1, 50px);
+    grid-template-columns: repeat(1, 50px);
+    border: 1px solid black;
+    margin-top: 10%;
+}
+
 button{
-    margin: 15px;
+    margin: 5px;
 }
 
 
