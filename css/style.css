@@ -1,0 +1,57 @@
+#head, #foot, #game-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#head, #foot{
+    height: 10vh;
+    max-height: 10vh;
+}
+
+#game-container {
+    flex-direction: row;
+    height: 70vh;
+}
+
+#piece-data{
+    flex-direction: column;
+}
+
+#holder, #up-next{
+    display: grid;
+    grid-template-rows: repeat(1, 20vmin);
+    grid-template-columns: repeat(1, 20vmin);
+    margin-right: auto;
+    border: 1px solid black;
+    margin-top: 15px;
+      
+}
+
+#board{
+    display: grid;
+    grid-template-rows: repeat(15, 6vmin);
+    grid-template-columns: repeat(10, 6vmin);
+    grid-gap: 1px;
+    margin: auto;
+}
+
+#board .cell {
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button{
+    margin: 15px;
+}
+
+
+
+
+
+
+

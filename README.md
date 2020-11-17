@@ -22,14 +22,14 @@ A tetris game using DOM Manpulation, Javascript, HTML, and CSS.
 
 ---
 ## Psuedo Code
-1.Define the required constants:
-   * Tetris peices 
-   * Score 
-   * Level
-   * Game board rows and colomns 
+* Define the required constants:
+   1. Tetris peices 
+   2. Score 
+   3. Level
+   4. Game board rows and colomns 
 
-2. Set up event listeners:
-   * Add event listener to the game board and give each cell an address (x, y) 
-   * Add event listener to the control buttom to collapse/expand the control menu.
-   * Add event listener to the play/pause button to either stop or start the game.
-   * Listen for specific keypresses if the game is live so the user can manipulate their peice.  
+* Set up event listeners:
+   1. Add event listener to the game board and give each cell an address (x, y) 
+   2. Add event listener to the control buttom to collapse/expand the control menu.
+   3. Add event listener to the play/pause button to either stop or start the game.
+   4. Listen for specific keypresses if the game is live so the user can manipulate their peice.  
