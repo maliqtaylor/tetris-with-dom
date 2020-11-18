@@ -19,6 +19,7 @@ const game = {
     board: linkCells(listToMatrix(board.children, 10)),
     lose: null,
     live: false,
+    currentTetromino: null,
 }
 const blocks = []
 
@@ -33,6 +34,12 @@ const oBlock = {
     color: 'yellow',
     positions: [[[1, 1, 1], [1, 1, 1], [0, 0, 0]]]
 }
+
+const iBlock = {
+    name: 'i',
+    color: 'cyan',
+    positions: [[[0, 1, 0], [0, 1, 0], [0, 1, 0]], [[1, 1, 1], [0, 0, 0], [0, 0, 0]]]
+}
 blocks.push(zBlock)
 /*---------------------------- Variables (state) ----------------------------*/
 
@@ -42,13 +49,17 @@ let testBlock = new Tetromino('red',
 )
 
 let testBlock2 = new Tetromino('gold', [[1, 1, 0], [1, 1, 0], [0, 0, 0]])
+let testBlock3 = new Tetromino('cyan', [[1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]], [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0][1, 0, 0, 0]])
+
+// let timer = setInterval(moveDown, 1000)
 /*----------------------------- Event Listeners -----------------------------*/
 document.body.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
         for (let row of game.board) {
             for (let cell of row) {
                 if (cell.holdsLivePiece) {
-                    if (!cell.prev) return
+                    if (!cell.prev || cell.locked) return
+                    if (cell.prev.locked) return
                     cell.prev.style.backgroundColor = cell.style.backgroundColor
                     cell.prev.holdsLivePiece = true
                     cell.holdsLivePiece = false
@@ -60,38 +71,13 @@ document.body.addEventListener('keydown', (e) => {
 });
 
 document.body.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') {
-        for (let i = game.board.length - 1; i > -1; i--) {
-            let row = game.board[i]
-            for (let j = row.length - 1; j > -1; j--) {
-                let cell = row[j]
-                if (cell.holdsLivePiece) {
-                    if (!cell.next) return
-                    cell.next.style.backgroundColor = cell.style.backgroundColor
-                    cell.next.holdsLivePiece = true
-                    cell.holdsLivePiece = false
-                    cell.style.backgroundColor = ''
-                }
-            }
-        }
-    }
+    if (e.key === 'ArrowRight') moveRight()
 });
 
 document.body.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown') {
-        for (let i = game.board.length - 1; i > -1; i--) {
-            let row = game.board[i]
-            for (let j = row.length - 1; j > -1; j--) {
-                let cell = row[j]
-                if (cell.holdsLivePiece) {
-                    if (!cell.below) return
-                    cell.below.style.backgroundColor = cell.style.backgroundColor
-                    cell.below.holdsLivePiece = true
-                    cell.holdsLivePiece = false
-                    cell.style.backgroundColor = ''
-                }
-            }
-        }
+        moveDown()
+        reInsertLive()
     }
 })
 /*-------------------------------- Functions --------------------------------*/
@@ -119,17 +105,18 @@ function listToMatrix(list, elementsPerSubArray) {
 function renderTetromino(piece) {
     for (let x = 0; x < piece.current.length; x++) {
         let row = piece.current[x]
+        game.currentTetromino = piece.current
 
         for (let y = 0; y < row.length; y++) {
             let current = row[y]
             if (current) {
-                game.board[x][y + 4].style.backgroundColor = piece.color
-                game.board[x][y + 4].holdsLivePiece = true
+                game.board[x][y + 3].style.backgroundColor = piece.color
+                game.board[x][y + 3].holdsLivePiece = true
             }
         }
     }
 }
-renderTetromino(testBlock2)
+renderTetromino(testBlock3)
 
 function linkCells(matrix) {
     let prev = null
@@ -159,4 +146,75 @@ function linkCells(matrix) {
         }
     }
     return matrix
+}
+
+function moveRight() {
+    for (let i = game.board.length - 1; i > -1; i--) {
+        let row = game.board[i]
+        for (let j = row.length - 1; j > -1; j--) {
+            let cell = row[j]
+            if (cell.holdsLivePiece) {
+                if (!cell.next || cell.locked) return
+                if (cell.next.locked && cell.below.active) return
+                cell.next.style.backgroundColor = cell.style.backgroundColor
+                cell.next.holdsLivePiece = true
+                cell.holdsLivePiece = false
+                cell.style.backgroundColor = ''
+            }
+        }
+    }
+}
+
+function moveDown() {
+    for (let y = game.board.length - 1; y > -1; y--) {
+        const row = game.board[y]
+        for (let x = row.length - 1; x > -1; x--) {
+            const cell = row[x]
+            if (cell.holdsLivePiece) {
+                if (!canMoveDown()) {
+                    lockBlock()
+                    return
+                }
+                cell.below.style.backgroundColor = cell.style.backgroundColor
+                cell.holdsLivePiece = false
+                cell.style.backgroundColor = ''
+            }
+        }
+    }
+}
+
+function canMoveDown() {
+    for (let y = 0; y < game.board.length; y++) {
+        const row = game.board[y];
+        for (let x = 0; x < row.length; x++) {
+            const cell = row[x];
+            if (cell.holdsLivePiece) {
+                if (!cell.below) return false
+                if (cell.below.locked) return false
+            }
+        }
+    }
+    return true
+}
+
+function reInsertLive() {
+    for (let row of game.board) {
+        for (let cell of row) {
+            if (cell.style.backgroundColor && !cell.locked) {
+                cell.holdsLivePiece = true
+            }
+        }
+    }
+}
+
+function lockBlock() {
+    game.board.forEach(row => {
+        row.forEach((cell) => {
+            if (cell.holdsLivePiece) {
+                cell.locked = true
+                cell.holdsLivePiece = false
+            }
+        })
+    })
+    renderTetromino(testBlock2)
 }
