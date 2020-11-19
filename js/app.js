@@ -51,22 +51,13 @@ let testBlock = new Tetromino('red',
 let testBlock2 = new Tetromino('gold', [[1, 1, 0], [1, 1, 0], [0, 0, 0]])
 let testBlock3 = new Tetromino('cyan', [[1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]], [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0][1, 0, 0, 0]])
 
-// let timer = setInterval(moveDown, 1000)
+let drop = setInterval(moveDown, 1000)
+let play = setInterval(reInsertLive, 1000)
 /*----------------------------- Event Listeners -----------------------------*/
 document.body.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
-        for (let row of game.board) {
-            for (let cell of row) {
-                if (cell.holdsLivePiece) {
-                    if (!cell.prev || cell.locked) return
-                    if (cell.prev.locked) return
-                    cell.prev.style.backgroundColor = cell.style.backgroundColor
-                    cell.prev.holdsLivePiece = true
-                    cell.holdsLivePiece = false
-                    cell.style.backgroundColor = ''
-                }
-            }
-        }
+        moveLeft()
+        reInsertLive()
     }
 });
 
@@ -213,6 +204,33 @@ function canMoveRight() {
     return true
 }
 
+function moveLeft() {
+    for (let row of game.board) {
+        for (let cell of row) {
+            if (cell.holdsLivePiece) {
+                if (!canMoveLeft()) return
+                cell.prev.style.backgroundColor = cell.style.backgroundColor
+                cell.holdsLivePiece = false
+                cell.style.backgroundColor = ''
+            }
+        }
+    }
+}
+
+function canMoveLeft() {
+    for (let y = 0; y < game.board.length; y++) {
+        const row = game.board[y];
+        for (let x = 0; x < row.length; x++) {
+            const cell = row[x];
+            if (cell.holdsLivePiece) {
+                if (!cell.prev) return false
+                if (cell.prev.locked) return false
+            }
+        }
+    }
+    return true
+}
+
 function reInsertLive() {
     for (let row of game.board) {
         for (let cell of row) {
@@ -234,29 +252,3 @@ function lockBlock() {
     })
     renderTetromino(testBlock2)
 }
-
-
-
-// function moveDown() {
-//     for (let i = game.board.length - 1; i > -1; i--) {
-//         let row = game.board[i]
-//         for (let j = row.length - 1; j > -1; j--) {
-//             let cell = row[j]
-//             if (cell.holdsLivePiece) {
-//                 // if (!cell.below && !cell.locked) {
-//                 //     lockBlock()
-//                 //     return
-//                 // } else if (cell.below && cell.prev) {
-//                 //     if (cell.below.locked || cell.prev.below.locked && cell.prev.holdsLivePiece) {
-//                 //         lockBlock()
-//                 //         return
-//                 //     }
-//                 // }
-//                 cell.below.style.backgroundColor = cell.style.backgroundColor
-//                 cell.below.holdsLivePiece = true
-//                 cell.holdsLivePiece = false
-//                 cell.style.backgroundColor = ''
-//             }
-//         }
-//     }
-// }
