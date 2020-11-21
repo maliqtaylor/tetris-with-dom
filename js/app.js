@@ -4,10 +4,12 @@ let board = document.querySelector('#board')
 createGameBoard()
 /*-------------------------------- Tetromino Class --------------------------------*/
 class Tetromino {
-    constructor(color, positions) {
+    constructor(color, positions, startX, startY) {
         this.color = color;
         this.positions = positions
         this.current = 0
+        this.startX = startX
+        this.startY = startY
     }
 }
 /*-------------------------------- Constants --------------------------------*/
@@ -46,29 +48,30 @@ allPositions.j.push([[0, 0, 0], [1, 1, 1], [0, 0, 1]])
 allPositions.j.push([[0, 1, 0], [0, 1, 0], [1, 1, 0]])
 
 //All l-block positions
-allPositions.l = [[[0, 0, 1], [1, 1, 1], [0, 0, 0]], [[0, 1, 0], [0, 1, 0], [0, 1, 1]]]
-allPositions.l.push([[1, 1, 0], [0, 1, 0], [0, 1, 0]])
+allPositions.l = [[[0, 0, 1], [1, 1, 1], [0, 0, 0]], [[1, 1, 0], [0, 1, 0], [0, 1, 0]]]
 allPositions.l.push([[0, 0, 0], [1, 1, 1], [1, 0, 0]])
+allPositions.l.push([[0, 1, 0], [0, 1, 0], [0, 1, 1]])
+
 /*---------------------------- Blocks ----------------------------*/
-const tBlock = new Tetromino('darkviolet', allPositions.t)
+const tBlock = new Tetromino('darkviolet', allPositions.t, 5, 2)
 allBlocks.push(tBlock)
 
-const zBlock = new Tetromino('red', allPositions.z)
+const zBlock = new Tetromino('red', allPositions.z, 5, 2)
 allBlocks.push(zBlock)
 
-const sBlock = new Tetromino('green', allPositions.s)
+const sBlock = new Tetromino('green', allPositions.s, 5, 2)
 allBlocks.push(sBlock)
 
-const oBlock = new Tetromino('gold', allPositions.o)
+const oBlock = new Tetromino('gold', allPositions.o, 6, 2)
 allBlocks.push(oBlock)
 
-const lBlock = new Tetromino('orange', allPositions.l)
+const lBlock = new Tetromino('orange', allPositions.l, 5, 2)
 allBlocks.push(lBlock)
 
-const jBlock = new Tetromino('blue', allPositions.j)
+const jBlock = new Tetromino('blue', allPositions.j, 5, 2)
 allBlocks.push(jBlock)
 
-const iBlock = new Tetromino('cyan', allPositions.i)
+const iBlock = new Tetromino('cyan', allPositions.i, 6, 3)
 allBlocks.push(iBlock)
 /*---------------------------- Intervals ----------------------------*/
 let dropTimer = setInterval(moveDown, 1000)
@@ -119,9 +122,11 @@ function moveDown() {
                 cell.below.style.backgroundColor = cell.style.backgroundColor
                 cell.holdsLivePiece = false
                 cell.style.backgroundColor = ''
+                console.log(game.currentPiece.startY);
             }
         }
     }
+    if (game.currentPiece.startY < 14) game.currentPiece.startY += 1
 }
 
 function canMoveDown() {
@@ -139,10 +144,10 @@ function canMoveDown() {
 }
 
 function moveRight() {
-    for (let i = game.board.length - 1; i > -1; i--) {
-        let row = game.board[i]
-        for (let j = row.length - 1; j > -1; j--) {
-            let cell = row[j]
+    for (let y = game.board.length - 1; y > -1; y--) {
+        let row = game.board[y]
+        for (let x = row.length - 1; x > -1; x--) {
+            let cell = row[x]
             if (cell.holdsLivePiece) {
                 if (!canMoveRight()) return
                 cell.next.style.backgroundColor = cell.style.backgroundColor
@@ -151,6 +156,7 @@ function moveRight() {
             }
         }
     }
+    if (game.currentPiece.startX < 9) game.currentPiece.startX += 1
 }
 
 function canMoveRight() {
@@ -178,6 +184,7 @@ function moveLeft() {
             }
         }
     }
+    if (game.currentPiece.startX > 0) game.currentPiece.startX -= 1
 }
 
 function canMoveLeft() {
@@ -195,17 +202,15 @@ function canMoveLeft() {
 }
 
 function rotate(piece) {
-    for (let y = game.board.length - 1; y > -1; y--) {
-        const row = game.board[y];
-        for (let x = row.length - 1; x > -1; x--) {
-            const cell = row[x];
-            if (cell.holdsLivePiece) {
-                console.log(cell.x, cell.y)
-            }
+    if (canMoveDown() && canMoveLeft() && canMoveRight()) {
+        if (piece.positions[piece.current + 1]) {
+            piece.current += 1
+        } else {
+            piece.current = 0
         }
+        clearBoard()
+        renderTetromino(piece)
     }
-    return true
-
 }
 /*-------------------------------- Game Board Functions  --------------------------------*/
 function createGameBoard() {
@@ -305,24 +310,46 @@ function addLine() {
         board.prepend(gameCell)
     }
 }
+
+function clearBoard() {
+    for (let row of game.board) {
+        for (let cell of row) {
+            if (!cell.locked) {
+                cell.style.backgroundColor = ''
+            }
+        }
+    }
+
+}
 /*-------------------------------- Tetromino Functions  --------------------------------*/
 function renderTetromino(piece) {
     game.currentPiece = piece
+    let refX = game.currentPiece.startX
+    let refY = game.currentPiece.startY
+    let num = 0
 
-    for (let x = 0; x < piece.positions[piece.current].length; x++) {
-        let row = piece.positions[piece.current][x]
+    for (let y = piece.positions[piece.current].length - 1; y > -1; y--) {
+        let row = piece.positions[piece.current][y]
+        for (let x = row.length - 1; x > -1; x--) {
+            let current = row[x]
+            if (num === row.length) {
+                num = 0
+                refX = piece.startX
+                refY--
+            }
 
-        for (let y = 0; y < row.length; y++) {
+            console.log(refY, refX);
+            console.log(game.board[refY][refX]);
+            let start = game.board[refY][refX]
 
-            let current = row[y]
             if (current) {
-                let start = game.board[x][y + 3]
-
                 if (!start.style.backgroundColor) {
                     start.style.backgroundColor = piece.color
                     start.holdsLivePiece = true
                 }
             }
+            refX > 0 ? refX-- : null
+            num++
         }
     }
 }

@@ -34,12 +34,12 @@ body {
 }
 
 #head, #foot{
-    height: 10vh;
+    height: 15vh;
 }
 
 #game-container {
     flex-direction: row;
-    height: 80vh;
+    height: 70vh;
     overflow: hidden;
 }
 
@@ -67,7 +67,7 @@ body {
 }
 
 button{
-    margin-bottom: auto;
+    margin: 2px;
 }
 
 
