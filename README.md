@@ -3,6 +3,8 @@
 ## Objective
 ---
 A tetris game using DOM Manpulation, Javascript, HTML, and CSS.
+---
+[Check out the game here!](festive-quiet.surge.sh)
 ## Minimum Requirements
 ---
 * Users should be able to click on a button to play/pause the game.
@@ -15,7 +17,7 @@ A tetris game using DOM Manpulation, Javascript, HTML, and CSS.
 
 * Users should be able to hold a Tetris piece for later. If they choose to hold, they must settle a new piece before they are able to hold again.
 
-* If the a Tetris pieces hit the top of the game board the game should end.
+* If a Tetris piece hits the top of the game board the game should end.
 ---
 ## Wireframe
 <img src = https://i.imgur.com/3F1t9Oe.png/>

@@ -18,6 +18,15 @@ body {
  text-align: center;
 }
 
+button{
+    margin: 2px;
+}
+
+h2{
+    color: white;
+    margin-top: auto;
+}
+
 #head, #foot, #game-container,#up-next, #hold{
     display: flex;
     flex-direction: column;
@@ -66,9 +75,8 @@ body {
     margin-top: 10%;
 }
 
-button{
-    margin: 2px;
-}
+
+
 
 
 
