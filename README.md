@@ -4,7 +4,7 @@
 ---
 A tetris game using DOM Manpulation, Javascript, HTML, and CSS.
 ---
-[Check out the game here!](festive-quiet.surge.sh)
+[Check out the game here!](https://www.festive-quiet.surge.sh)
 ## Minimum Requirements
 ---
 * Users should be able to click on a button to play/pause the game.
