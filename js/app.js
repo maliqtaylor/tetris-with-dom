@@ -1,11 +1,14 @@
 /*------------------------ Cached Element References ------------------------*/
 let board = document.querySelector('#board')
 let loseMssg = document.querySelector('h2')
+let holdImg = document.querySelector('#holdImg')
+let nextImg = document.querySelector('#nextImg')
 /*-------------------------------- Initiators --------------------------------*/
 createGameBoard()
 /*-------------------------------- Tetromino Class --------------------------------*/
 class Tetromino {
-    constructor(color, positions, startX, startY) {
+    constructor(name, color, positions, startX, startY) {
+        this.name = name
         this.color = color;
         this.positions = positions
         this.current = 0
@@ -20,6 +23,7 @@ const game = {
     board: linkCells(listToMatrix(board.children, 10)),
     lose: null,
     live: false,
+    started: false,
     currentPiece: null,
 }
 //Holder for all game piece positions
@@ -58,30 +62,30 @@ allPositions.l.push([[0, 0, 0], [1, 1, 1], [1, 0, 0]])
 allPositions.l.push([[0, 1, 0], [0, 1, 0], [0, 1, 1]])
 
 /*---------------------------- Blocks ----------------------------*/
-const tBlock = new Tetromino('darkviolet', allPositions.t, 5, 2)
+const tBlock = new Tetromino('tBlock', 'darkviolet', allPositions.t, 5, 2)
 allBlocks.push(tBlock)
 
-const zBlock = new Tetromino('red', allPositions.z, 5, 2)
+const zBlock = new Tetromino('zBlock', 'red', allPositions.z, 5, 2)
 allBlocks.push(zBlock)
 
-const sBlock = new Tetromino('green', allPositions.s, 5, 2)
+const sBlock = new Tetromino('sBlock', 'chartreuse', allPositions.s, 5, 2)
 allBlocks.push(sBlock)
 
-const oBlock = new Tetromino('gold', allPositions.o, 6, 2)
+const oBlock = new Tetromino('oBlock', 'gold', allPositions.o, 6, 2)
 allBlocks.push(oBlock)
 
-const lBlock = new Tetromino('orange', allPositions.l, 5, 2)
+const lBlock = new Tetromino('lBlock', 'orange', allPositions.l, 5, 2)
 allBlocks.push(lBlock)
 
-const jBlock = new Tetromino('blue', allPositions.j, 5, 2)
+const jBlock = new Tetromino('jBlock', 'blue', allPositions.j, 5, 2)
 allBlocks.push(jBlock)
 
-const iBlock = new Tetromino('cyan', allPositions.i, 6, 3)
+const iBlock = new Tetromino('iBlock', 'cyan', allPositions.i, 6, 3)
 allBlocks.push(iBlock)
 /*---------------------------- Intervals ----------------------------*/
-let dropTimer = setInterval(moveDown, 400)
-let reInsertTimer = setInterval(reInsertLive, 400)
-let clearTimer = setInterval(checkLines, 10)
+// let dropTimer = setInterval(moveDown, 1000)
+// let reInsertTimer = setInterval(reInsertLive, 1000)
+// let clearTimer = setInterval(checkLines, 10)
 /*----------------------------- Event Listeners -----------------------------*/
 document.body.addEventListener('keydown', (e) => {
     e.preventDefault()
@@ -123,8 +127,10 @@ function moveDown() {
                 if (!canMoveDown()) {
                     lockBlock()
                     if (!game.lose) {
-                        renderTetromino(getRandomBlock(blockQueue.shift))
+                        renderTetromino(blockQueue.shift())
                         blockQueue.push(getRandomBlock())
+                        nextImg.src = `./images/${blockQueue[0].name}.png`
+                        nextImg.className = `${blockQueue[0].name}`
                     }
                     return
                 }
@@ -417,7 +423,7 @@ function lockBlock() {
             if (cell.holdsLivePiece) {
                 cell.locked = true
                 cell.holdsLivePiece = false
-                if (!cell.above && cell.x >= 3 && cell.y <= 6) {
+                if (!cell.above && cell.x >= 3 && cell.y <= 5) {
                     game.lose = true
                     loseMssg.style.color = 'red'
                 }
@@ -426,7 +432,16 @@ function lockBlock() {
     })
 }
 
-blockQueue.push(getRandomBlock())
-blockQueue.push(getRandomBlock())
-renderTetromino(blockQueue.shift())
-blockQueue.push(getRandomBlock())
+function renderFirstBlock() {
+    if (!game.started) {
+        blockQueue.push(getRandomBlock())
+        blockQueue.push(getRandomBlock())
+        renderTetromino(blockQueue.shift())
+        nextImg.src = `./images/${blockQueue[0].name}.png`
+        nextImg.className = `${blockQueue[0].name}`
+        blockQueue.push(getRandomBlock())
+    }
+    game.started = true
+}
+
+renderFirstBlock()

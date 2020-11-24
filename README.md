@@ -9,7 +9,7 @@ A tetris game using DOM Manpulation, Javascript, HTML, and CSS.
 ---
 * Users should be able to click on a button to play/pause the game.
   
-* Once the game starts radomized Tetris pieces should fall from the top of the game board. 
+* Once the game starts randomized Tetris pieces should fall from the top of the game board. 
   
 * A Tetris piece should become settled once it falls to the 'bottom' of the game board or falls onto another settle piece.
 

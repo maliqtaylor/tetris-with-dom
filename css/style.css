@@ -15,7 +15,8 @@
 body {
  margin: 0;
  min-height: 100vh;
- text-align: center;
+ text-align: center; 
+ /* background-color: black; */
 }
 
 button{
@@ -25,6 +26,10 @@ button{
 h2{
     color: white;
     margin-top: auto;
+}
+
+img{
+    margin: auto;
 }
 
 #head, #foot, #game-container,#up-next, #hold{
@@ -58,6 +63,7 @@ h2{
     grid-template-columns: repeat(10, 20px);
     grid-gap: 1px;
     max-height: 315px;
+    /* background-color:#404040; */
 }
 
 .cell {
@@ -75,12 +81,22 @@ h2{
     margin-top: 10%;
 }
 
+.iBlock{
+    height: 10px;
+    width: 35px;
+}
 
+.oBlock{
+    height: 25px;
+    width: 25px;
+}
 
+.jBlock, .tBlock, .zBlock, .sBlock{
+    width: 35px;
+    height: 25px;
+}
 
-
-
-
-
-
-
+.lBlock{
+    width: 38px;
+    height: 25px;
+}
