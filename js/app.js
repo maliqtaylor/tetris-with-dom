@@ -25,6 +25,8 @@ const game = {
     live: false,
     started: false,
     currentPiece: null,
+    canSwitch: true,
+    turn: 0,
 }
 //Holder for all game piece positions
 const allPositions = {}
@@ -32,6 +34,8 @@ const allPositions = {}
 const allBlocks = []
 //Block Queue
 const blockQueue = []
+//Holder
+const holdContainer = []
 /*---------------------------- Positions ----------------------------*/
 //All z-block positions
 allPositions.z = [[[1, 1, 0], [0, 1, 1], [0, 0, 0]], [[0, 1, 0], [1, 1, 0], [1, 0, 0]]]
@@ -60,9 +64,8 @@ allPositions.j.push([[0, 1, 0], [0, 1, 0], [1, 1, 0]])
 allPositions.l = [[[0, 0, 1], [1, 1, 1], [0, 0, 0]], [[1, 1, 0], [0, 1, 0], [0, 1, 0]]]
 allPositions.l.push([[0, 0, 0], [1, 1, 1], [1, 0, 0]])
 allPositions.l.push([[0, 1, 0], [0, 1, 0], [0, 1, 1]])
-
 /*---------------------------- Blocks ----------------------------*/
-const tBlock = new Tetromino('tBlock', 'darkviolet', allPositions.t, 5, 2)
+const tBlock = new Tetromino('tBlock', 'violet', allPositions.t, 5, 2)
 allBlocks.push(tBlock)
 
 const zBlock = new Tetromino('zBlock', 'red', allPositions.z, 5, 2)
@@ -77,18 +80,17 @@ allBlocks.push(oBlock)
 const lBlock = new Tetromino('lBlock', 'orange', allPositions.l, 5, 2)
 allBlocks.push(lBlock)
 
-const jBlock = new Tetromino('jBlock', 'blue', allPositions.j, 5, 2)
+const jBlock = new Tetromino('jBlock', 'dodgerblue', allPositions.j, 5, 2)
 allBlocks.push(jBlock)
 
 const iBlock = new Tetromino('iBlock', 'cyan', allPositions.i, 6, 3)
 allBlocks.push(iBlock)
 /*---------------------------- Intervals ----------------------------*/
-// let dropTimer = setInterval(moveDown, 1000)
-// let reInsertTimer = setInterval(reInsertLive, 1000)
-// let clearTimer = setInterval(checkLines, 10)
+let dropTimer = setInterval(moveDown, 1000)
+let reInsertTimer = setInterval(reInsertLive, 1000)
+let clearTimer = setInterval(checkLines, 10)
 /*----------------------------- Event Listeners -----------------------------*/
 document.body.addEventListener('keydown', (e) => {
-    e.preventDefault()
     if (e.key === 'ArrowLeft') {
         moveLeft()
         reInsertLive()
@@ -96,7 +98,6 @@ document.body.addEventListener('keydown', (e) => {
 });
 
 document.body.addEventListener('keydown', (e) => {
-    e.preventDefault()
     if (e.key === 'ArrowRight') {
         moveRight()
         reInsertLive()
@@ -104,7 +105,6 @@ document.body.addEventListener('keydown', (e) => {
 });
 
 document.body.addEventListener('keydown', (e) => {
-    e.preventDefault()
     if (e.key === 'ArrowDown') {
         moveDown()
         reInsertLive()
@@ -113,8 +113,13 @@ document.body.addEventListener('keydown', (e) => {
 
 document.body.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp') {
-        e.preventDefault()
         rotate(game.currentPiece)
+    }
+})
+
+document.body.addEventListener('keydown', (e) => {
+    if (e.key === 'h' || e.key === 'H') {
+        hold(game.currentPiece)
     }
 })
 /*-------------------------------- Block Movement Functions --------------------------------*/
@@ -125,6 +130,8 @@ function moveDown() {
             const cell = row[x]
             if (cell.holdsLivePiece) {
                 if (!canMoveDown()) {
+                    game.turn++
+                    game.canSwitch = true
                     lockBlock()
                     if (!game.lose) {
                         renderTetromino(blockQueue.shift())
@@ -443,5 +450,32 @@ function renderFirstBlock() {
     }
     game.started = true
 }
-
 renderFirstBlock()
+
+function hold(piece) {
+    if (game.turn && game.canSwitch) {
+        if (!holdContainer[0]) {
+            holdImg.src = `./images/${piece.name}.png`
+            holdImg.className = `${piece.name}`
+            holdContainer.push(piece)
+            clearBoard()
+            renderTetromino(blockQueue.shift())
+            blockQueue.push(getRandomBlock())
+            nextImg.src = `./images/${blockQueue[0].name}.png`
+            nextImg.className = `${blockQueue[0].name}`
+            game.canSwitch = false
+
+        } else {
+            swapBlocks(piece)
+        }
+    }
+}
+
+function swapBlocks(piece) {
+    holdContainer.push(piece)
+    clearBoard()
+    renderTetromino(holdContainer.shift())
+    holdImg.src = `./images/${holdContainer[0].name}.png`
+    holdImg.className = `${holdContainer[0].name}`
+    game.canSwitch = false
+}
