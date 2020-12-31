@@ -1,13 +1,10 @@
 # Tetris in the DOM
 
 ## Objective
----
-
-A tetris game using DOM Manpulation, Javascript, HTML, and CSS.
+[Tetris](https://tetris-dom-project.surge.sh/) built using DOM Manpulation, Javascript, HTML, and CSS.
 
 ---
-
-[Check out the game here!](http://tetris-dom-project.surge.sh/)
+## Preview
 <img src="https://i.imgur.com/YaRbXB2.png">
 
 ---
@@ -46,10 +43,10 @@ A tetris game using DOM Manpulation, Javascript, HTML, and CSS.
    * Add event listener to the play/pause button to either stop or start the game.
    * Listen for specific keypresses if the game is live so the user can manipulate their peice. 
 --- 
-## Icebox
+## Stretch Goals
 * Review my code and refactor/make more dry
 * Add a score
 * Improve rotate functionality
-* Implement buttons
+* Display controls to the user
 * Fix render when the tetris stack gets to the top of the board
 * Add a live background/more styling
