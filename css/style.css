@@ -14,7 +14,7 @@
 
 body {
  margin: 0;
- min-height: 100vh;
+ max-height: 100vh;
  text-align: center;
 }
 
@@ -23,12 +23,17 @@ button{
 }
 
 h2{
-    color: white;
+    color: red;
+    display: none;
     margin-top: auto;
 }
 
 img{
     margin: auto;
+}
+
+ul{
+  list-style: none;
 }
 
 #head, #foot, #game-container,#up-next, #hold{
@@ -46,14 +51,18 @@ img{
     margin-bottom: auto;
 }
 
-#head, #foot{
-    height: 15vh;
+#head{
+    height: 10vh;
 }
 
 #game-container {
     flex-direction: row;
-    height: 70vh;
+    height: 50vh;
     overflow: hidden;
+}
+
+#foot{
+  height: 15vh;
 }
 
 #board{
@@ -98,4 +107,9 @@ img{
 .lBlock{
     width: 38px;
     height: 25px;
+}
+
+.card{
+  height: 144px;
+  overflow-y: auto;
 }
