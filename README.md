@@ -44,9 +44,7 @@
    * Listen for specific keypresses if the game is live so the user can manipulate their peice. 
 --- 
 ## Stretch Goals
-* Review my code and refactor/make more dry
 * Add a score
 * Improve rotate functionality
-* Display controls to the user
-* Fix render when the tetris stack gets to the top of the board
+* Make the game controls work on a touch screen device 
 * Add a live background/more styling
