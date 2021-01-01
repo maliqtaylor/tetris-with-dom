@@ -2,6 +2,7 @@
 let board = document.querySelector('#board')
 let loseMssg = document.querySelector('h2')
 let holdImg = document.querySelector('#holdImg')
+let holdDiv = document.querySelector('#hold')
 let nextImg = document.querySelector('#nextImg')
 let playBtn = document.querySelector('#play-btn')
 /*-------------------------------- Initiators --------------------------------*/
@@ -124,7 +125,7 @@ document.body.addEventListener('keydown', (e) => {
   }
 })
 
-playBtn.addEventListener("click", () => {
+playBtn.addEventListener('click', () => {
   if (game.lose) {
     resetGame()
   } else if (!game.paused) {
@@ -133,6 +134,14 @@ playBtn.addEventListener("click", () => {
     resumeGame()
   }
 });
+
+board.addEventListener('click', () => {
+  rotate(game.currentPiece)
+})
+
+holdDiv.addEventListener('click', () => {
+  hold(game.currentPiece)
+})
 /*-------------------------------- Block Movement Functions --------------------------------*/
 function moveDown() {
   if (game.paused || game.lose) return
@@ -168,8 +177,8 @@ function canMoveDown() {
     for (let x = 0; x < row.length; x++) {
       const cell = row[x];
       if (cell.holdsLivePiece) {
-        if (!cell.below) return false
-        if (cell.below.locked) return false
+        if (!cell.below || cell.below.locked) return false
+        // if (cell.below.locked) return false
       }
     }
   }
@@ -506,10 +515,10 @@ renderFirstBlock()
 function hold(piece) {
   if (game.turn && game.canSwitch && !game.paused && !game.lose) {
     if (!holdContainer[0]) {
+      clearBoard()
       holdImg.src = `./images/${piece.name}.png`
       holdImg.className = `${piece.name}`
       holdContainer.push(piece)
-      clearBoard()
       renderTetromino(blockQueue.shift())
       blockQueue.push(getRandomBlock())
       nextImg.src = `./images/${blockQueue[0].name}.png`
